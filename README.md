@@ -30,3 +30,11 @@ This folder contains everything related to all academic students projects develo
 - Once car come to exit again the rf reader reads the id and calculate time and cost. Once payment received car allowed to exit and again
   free space in the parking get updated.
 - This folder contains everything regarding the project.
+
+4. American Standard Sign Language Representation Using Speech Recognition
+- This project contains two parts
+	1. Matlab speech recognition and GLCD display to show the hand gestures in the ameriacan standard lang for deaf and dumb people
+	2. Arduino interface with GLCD receives data from serial and displays its corresponding hand gesture image on GLCD
+- For speech recognition it uses Mel-frequency cestrum coefficien Algorithm.
+- Once the pronounced character is recognized corresponding character is send on serial which then displaced on GLCD.
+- Arduino Uno is interfaced with the GLCD to display the character.
