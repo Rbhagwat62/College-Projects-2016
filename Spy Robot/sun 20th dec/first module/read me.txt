@@ -1,0 +1,10 @@
+
+basic of python
+familier with python environment
+basic example
+execution in pc and on raspberry pi
+basic communication
+led communication 
+then motor driver basic 
+drive motor through network.
+

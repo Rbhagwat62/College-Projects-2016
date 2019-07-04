@@ -1,0 +1,13 @@
+#!/usr/bin/python           # This is client.py file
+
+import socket               # Import socket module
+
+s = socket.socket()         # Create a socket object
+host = "192.168.1.5" # Get local machine name
+port = 4445                # Reserve a port for your service.
+
+s.connect((host, port))
+while True:
+    print s.recv(1024)
+    s.send("\nData Receive Ack \n");
+s.close                     # Close the socket when done
