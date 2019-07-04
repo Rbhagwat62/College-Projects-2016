@@ -18,3 +18,15 @@ This folder contains everything related to all academic students projects develo
 - Additional gas sensor is interface with raspberry Pi and reads digital data if gas detects increase to threshold
 - Raspberry pi sends data of gas sensor to android server.
 - This folder contains everything regarding the project except the android software code.
+
+3. RF id and zigbeed based Automatic car parking system
+- This project mainly divided into three parts: 
+	1. ir sensor and arduino due with Zigbee shield install at parking,
+	2. Arduino uno with zigbee module, RF id reader, motor control and Graphic LCD to display empty space in parking.
+	3. Database using visual studio for the dual time calculation and calculation of parking cost
+- Each vehicle has passive rf id assigned. At entrance id read by rf reader and check if any free space available.
+- If free space available then car is allowed to enter in the parking and allowed to park on free space shown on graphic LCD.
+- Once car is parked on shown free space, ir sensor send all parked space data to the entrace system and update the free space details.
+- Once car come to exit again the rf reader reads the id and calculate time and cost. Once payment received car allowed to exit and again
+  free space in the parking get updated.
+- This folder contains everything regarding the project.
