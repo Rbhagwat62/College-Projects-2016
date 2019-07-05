@@ -1,0 +1,130 @@
+C51 COMPILER V9.02   RF24                                                                  12/23/2014 12:18:01 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE RF24
+OBJECT MODULE PLACED IN .\RF24.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\finaldemo\RF24.c BROWSE DEBUG OBJECTEXTEND PRINT(.\RF24.lst) OBJECT(.\RF
+                    -24.obj)
+
+line level    source
+
+   1          #include<spi.h>
+   2          #include<USART.h>
+   3          #include<P89v51Rx2.h>
+   4          #include<delay.h>
+   5          #include<HRD.h>
+   6          
+   7          sbit CE =P1^0;
+   8          sbit CSN =P1^4;
+   9          
+  10          void write_byt_addrs(unsigned char addr,unsigned char dat)
+  11          {//     unsigned char i;
+  12   1              unsigned char address=addr+0x20;
+  13   1              CSN=0;
+  14   1              data_in[0]=spiWrite(address);
+  15   1              data_in[1]=spiWrite(dat);
+  16   1               CSN=1;
+  17   1      }
+  18          
+  19          void read_byt_addrs(unsigned char addr,unsigned char count)
+  20          {
+  21   1                unsigned char i=0;
+  22   1                CSN=0;
+  23   1                for(i=0;i<=count;i++)
+  24   1                data_in[i]=spiWrite(addr);
+  25   1               CSN=1;
+  26   1               
+  27   1               for(i=0;i<=count;i++)
+  28   1               { 
+  29   2                      USART_puts("\ndata_in\t");
+  30   2                      SerialPrint(i);
+  31   2                      USART_puts("\t");
+  32   2                      //SerialPrint(data_in[i]);
+  33   2      //              dec_to_hex(data_in[i]);
+  34   2              }
+  35   1              
+  36   1      }
+  37          
+  38          void transmit(unsigned char val)
+  39          {
+  40   1      //unsigned char i;
+  41   1      CSN=0;
+  42   1      data_in[0]=spiWrite(0xE1);
+  43   1      CSN=1;
+  44   1      
+  45   1      CSN=0;
+  46   1      data_in[0]=spiWrite(0xA0);
+  47   1      data_in[1]=spiWrite(val);
+  48   1      CSN=1;
+  49   1      
+  50   1      CE=0;
+  51   1      delay(1);
+  52   1      write_byt_addrs(0x00,0x3A);
+  53   1      delay(1);
+  54   1      CE=1;
+C51 COMPILER V9.02   RF24                                                                  12/23/2014 12:18:01 PAGE 2   
+
+  55   1      delay(10);
+  56   1      write_byt_addrs(0x00,0x3B);
+  57   1      }
+  58          
+  59          
+  60          unsigned char receive()
+  61          {//unsigned char i;      
+  62   1      CSN=0;
+  63   1      rx_data[0]=spiWrite(0x61);
+  64   1      rx_data[1]=spiWrite(0x00);
+  65   1      CSN=1;
+  66   1      delay(10);
+  67   1      
+  68   1      
+  69   1      CSN=0;
+  70   1      data_in[0]=spiWrite(0xE2);
+  71   1      CSN=1 ;
+  72   1      delay(10);
+  73   1      return rx_data[1];
+  74   1      }
+  75          
+  76          void byt_write(unsigned char addrs)
+  77          {
+  78   1              unsigned char add;
+  79   1              add=addrs+0x20;
+  80   1              CSN=0;
+  81   1              data_in[0]=spiWrite(add);
+  82   1              data_in[1]=spiWrite(0xB1);
+  83   1              data_in[2]=spiWrite(0xB1);
+  84   1              data_in[3]=spiWrite(0xB1);
+  85   1              data_in[4]=spiWrite(0xB1);
+  86   1              data_in[5]=spiWrite(0xB1);
+  87   1              CSN=1;
+  88   1      }               
+  89          
+  90          void write_byt_txd()
+  91          {       
+  92   1               unsigned char add;
+  93   1              add=0x10+0x20;
+  94   1              CSN=0;
+  95   1              data_in[0]=spiWrite(add);
+  96   1              data_in[1]=spiWrite(0xE7);
+  97   1              data_in[2]=spiWrite(0xE7);
+  98   1              data_in[3]=spiWrite(0xE7);
+  99   1              data_in[4]=spiWrite(0xE7);
+ 100   1              data_in[5]=spiWrite(0xE7);
+ 101   1              CSN=1;
+ 102   1      
+ 103   1      }
+ 104          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    352    ----
+   CONSTANT SIZE    =     12    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     20       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

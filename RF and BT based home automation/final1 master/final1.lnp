@@ -1,0 +1,7 @@
+".\delay.obj",
+".\RF24.obj",
+".\spi.obj",
+".\USART.obj",
+"fial.obj" 
+TO "final1" 
+RAMSIZE(256) 

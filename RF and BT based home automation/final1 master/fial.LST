@@ -1,0 +1,317 @@
+C51 COMPILER V9.02   FIAL                                                                  02/12/2015 11:43:06 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE FIAL
+OBJECT MODULE PLACED IN fial.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE fial.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<P89v51Rx2.h>
+   2          #include<USART.h>
+   3          #include<delay.h>
+   4          #include<I2C.h>
+   5          #include<RF24.h>
+   6          #include<spi.h>
+   7          
+   8          sbit sw=P3^4;
+   9          sbit config=P3^5;
+  10          
+  11          sbit l1=P2^0;
+  12          sbit l2=P2^1;
+  13          sbit l3=P2^2;
+  14          sbit l4=P2^3;
+  15          sbit l5=P2^4;
+  16          sbit l6=P2^5;
+  17          sbit l7=P2^6;
+  18          sbit l8=P2^7;
+  19          
+  20          void Init();
+  21          
+  22          sbit CE =P1^0;
+  23          sbit CSN=P1^4;
+  24          sbit IRQ=P3^3;
+  25          
+  26          //sbit sw1=P0^0;
+  27          
+  28          //sbit led1 =P0^1;
+  29          
+  30          sbit MISO=P1^6;
+  31          sbit MOSI=P1^5;
+  32          sbit SCK=P1^7;
+  33          
+  34          unsigned char rx[16];
+  35          unsigned char rx1;
+  36          unsigned char index=0;
+  37          volatile unsigned char temp; 
+  38          bit flag=0;
+  39          
+  40          void EEEP(unsigned char ind);
+  41          void process();
+  42          
+  43          void receive1()
+  44          {
+  45   1      
+  46   1              unsigned char c,i;
+  47   1              if(RI==1)
+  48   1              {
+  49   2                      c=SBUF;
+  50   2                      RI=0;
+  51   2      
+  52   2                              if(config==0)
+  53   2                              {        
+  54   3                                      if(c=='s')
+  55   3                                      {
+C51 COMPILER V9.02   FIAL                                                                  02/12/2015 11:43:06 PAGE 2   
+
+  56   4                                              index=1;
+  57   4                                      //      USART_puts("\nstart");
+  58   4                                      }
+  59   3                                      else 
+  60   3                                      {
+  61   4                                      rx[index]=c;
+  62   4                                      
+  63   4                                      //SerialPrint(index);
+  64   4                                              if(c=='t')
+  65   4                                              {
+  66   5                                              temp=index;
+  67   5                                              index=0;
+  68   5                                              
+  69   5                      
+  70   5                                      //      USART_puts("\ndone");
+  71   5                                              USART_puts("PWD");
+  72   5                                              for(i=2;i<temp;i++)
+  73   5                                              {USART_putc(rx[i]);
+  74   6                                              //USART_puts("\n");}
+  75   6                                              
+  76   6                                              }
+  77   5                                              if(rx[1]=='p')
+  78   5                                              EEEP(temp);
+  79   5                                              
+  80   5                                              }
+  81   4                                              index++;
+  82   4                      
+  83   4                      
+  84   4                                      }
+  85   3                              } 
+  86   2      
+  87   2                              else
+  88   2                              {        if(c=='s')
+  89   3                                        index=1;
+  90   3                                       else
+  91   3                                       {
+  92   4                                              rx[index]=c;
+  93   4                                              if(c=='t')
+  94   4                                              {
+  95   5                                              temp=index;
+  96   5                                              index=0;
+  97   5                                              process();
+  98   5                                              }
+  99   4                                              index++;
+ 100   4                                      }
+ 101   3                              }
+ 102   2              RI=0;           
+ 103   2              }
+ 104   1      }       
+ 105          
+ 106          void EEEP(unsigned char ind)
+ 107          {       unsigned char i=2,j=0;                          
+ 108   1              while(i<=ind)
+ 109   1              {
+ 110   2                      Write_I2C(j,rx[i]);
+ 111   2                      Write_I2C(j+1,0);
+ 112   2      
+ 113   2                      j=j+2;
+ 114   2                      i++;
+ 115   2              }
+ 116   1                      
+ 117   1                              
+C51 COMPILER V9.02   FIAL                                                                  02/12/2015 11:43:06 PAGE 3   
+
+ 118   1      
+ 119   1      }
+ 120          void process()
+ 121          {
+ 122   1              if((rx[1]==Read_I2C(0))&&(rx[2]==Read_I2C(2))&&(rx[3]==Read_I2C(4)))
+ 123   1                      {
+ 124   2      
+ 125   2                              if(rx[4]=='A')
+ 126   2                              {
+ 127   3                                      if((rx[7]=='L')&&(rx[8]=='1'))
+ 128   3                                      l1=!l1;
+ 129   3      
+ 130   3                                      if((rx[7]=='L')&&(rx[8]=='2'))
+ 131   3                                      l2=!l2;
+ 132   3      
+ 133   3                                      if((rx[7]=='L')&&(rx[8]=='3'))
+ 134   3                                      l3=!l3;
+ 135   3      
+ 136   3                                      if((rx[7]=='L')&&(rx[8]=='4'))
+ 137   3                                      l4=!l4;
+ 138   3      
+ 139   3                                      if((rx[7]=='L')&&(rx[8]=='5'))
+ 140   3                                      l5=!l5;
+ 141   3      
+ 142   3                                      if((rx[7]=='L')&&(rx[8]=='6'))
+ 143   3                                      l6=!l6;
+ 144   3      
+ 145   3                                      if((rx[7]=='L')&&(rx[8]=='7'))
+ 146   3                                      l7=!l7;
+ 147   3      
+ 148   3                                      if((rx[7]=='L')&&(rx[8]=='8'))
+ 149   3                                      l8=!l8;
+ 150   3                              }
+ 151   2                              else if(rx[4]=='S')
+ 152   2                              {
+ 153   3                                      if((rx[8]=='A')&&(rx[9]=='R')&&(rx[10]=='M'))
+ 154   3                                      {
+ 155   4                                      USART_putc(Read_I2C(0));
+ 156   4                                      USART_putc(Read_I2C(2));
+ 157   4                                      USART_putc(Read_I2C(4));
+ 158   4                                      USART_puts("SSGP01");
+ 159   4                                      transmit('G');
+ 160   4                                      byt_write(0x10);
+ 161   4                                      write_byt_addrs(0x10,0x45);
+ 162   4                                      transmit('S');
+ 163   4                                      write_byt_txd();
+ 164   4                                      }
+ 165   3                                      if((rx[8]=='D')&&(rx[9]=='R')&&(rx[10]=='M'))
+ 166   3                                      {
+ 167   4                                      USART_putc(Read_I2C(0));
+ 168   4                                      USART_putc(Read_I2C(2));
+ 169   4                                      USART_putc(Read_I2C(4));
+ 170   4                                      USART_puts("SSGP02");
+ 171   4                                      transmit('D');
+ 172   4                                      byt_write(0x10);
+ 173   4                                      write_byt_addrs(0x10,0x45);
+ 174   4                                      transmit('D');
+ 175   4                                      write_byt_txd();
+ 176   4                                      
+ 177   4                                      }
+ 178   3                                      if((rx[8]=='S')&&(rx[9]=='O')&&(rx[10]=='S'))
+ 179   3                                      {
+C51 COMPILER V9.02   FIAL                                                                  02/12/2015 11:43:06 PAGE 4   
+
+ 180   4                                      USART_putc(Read_I2C(0));
+ 181   4                                      USART_putc(Read_I2C(2));
+ 182   4                                      USART_putc(Read_I2C(4));
+ 183   4                                      USART_puts("SSGP03");
+ 184   4                                      byt_write(0x10);
+ 185   4                                      write_byt_addrs(0x10,0x45);
+ 186   4                                      transmit('X');
+ 187   4                                      write_byt_txd();
+ 188   4                                      }
+ 189   3      
+ 190   3                              }
+ 191   2      
+ 192   2                      }
+ 193   1              else
+ 194   1              {
+ 195   2                      USART_puts("\n not match");
+ 196   2                      }
+ 197   1      }
+ 198          
+ 199          external0_int() interrupt 2 
+ 200          {  
+ 201   1      //USART_puts("\nint occured");
+ 202   1              rx1=receive();
+ 203   1              if(rx1=='X')
+ 204   1                      {
+ 205   2                      transmit('#');
+ 206   2                      byt_write(0x10);
+ 207   2                      write_byt_addrs(0x10,0x45);
+ 208   2                      delay(100);
+ 209   2                      transmit('X');
+ 210   2                      delay(100);
+ 211   2                      write_byt_txd();
+ 212   2                      }
+ 213   1      //transmit(rx);
+ 214   1      write_byt_addrs(0x07,0x40);
+ 215   1      IE1=0;
+ 216   1      } 
+ 217          
+ 218          
+ 219          
+ 220          void main()
+ 221          {          
+ 222   1      //unsigned char i;
+ 223   1      
+ 224   1      
+ 225   1      //unsigned char tem;
+ 226   1      
+ 227   1      Init();
+ 228   1      
+ 229   1          write_byt_addrs(0x00,0x3B);
+ 230   1              write_byt_addrs(0x01,0x00);
+ 231   1              write_byt_addrs(0x02,0x03);
+ 232   1              write_byt_addrs(0x11,0x01);
+ 233   1              write_byt_addrs(0x12,0x01);
+ 234   1              write_byt_addrs(0x05,0x02);
+ 235   1              write_byt_addrs(0x06,0x26);
+ 236   1              //write_addrs(0x10)
+ 237   1      
+ 238   1              
+ 239   1              CSN=0;
+ 240   1              spiWrite(0xE1);
+ 241   1              CSN=1;
+C51 COMPILER V9.02   FIAL                                                                  02/12/2015 11:43:06 PAGE 5   
+
+ 242   1              CSN=0;
+ 243   1              spiWrite(0xE2);
+ 244   1              CSN=1;
+ 245   1              byt_write(0x0B);
+ 246   1              write_byt_addrs(0x0C,0x45);
+ 247   1              
+ 248   1              
+ 249   1                
+ 250   1      //USART_puts("\n start");
+ 251   1      
+ 252   1      
+ 253   1      while(1)
+ 254   1              {
+ 255   2                      receive1();
+ 256   2                      
+ 257   2              }
+ 258   1      }
+ 259          
+ 260          void Init()
+ 261          {
+ 262   1      USART_Init();
+ 263   1      //sw=1;
+ 264   1      config=1;
+ 265   1      
+ 266   1      l1=0;
+ 267   1      l2=0;
+ 268   1      l3=0;
+ 269   1      l4=0;
+ 270   1      l5=0;
+ 271   1      l6=0;
+ 272   1      l7=0;
+ 273   1      l8=0;
+ 274   1      
+ 275   1      CE=1;
+ 276   1      CSN=1;
+ 277   1      MOSI=0;
+ 278   1      MISO=1;
+ 279   1      SCK=0;
+ 280   1      SPCTL=0xD0;
+ 281   1      IEN0=0x94;
+ 282   1      IP0H=0x04;
+ 283   1      //led=0;
+ 284   1      IRQ=1;
+ 285   1      }
+ 286          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    995    ----
+   CONSTANT SIZE    =     37    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     19       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
