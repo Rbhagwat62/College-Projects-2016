@@ -1,1 +1,0 @@
-unsigned char data_in[10],rx_data[10];

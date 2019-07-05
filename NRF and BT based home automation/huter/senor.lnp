@@ -1,8 +1,0 @@
-"STARTUP.obj",
-"delay.obj",
-"main.obj",
-"RF24.obj",
-"spi.obj",
-"USART.obj" 
-TO "senor" 
-RAMSIZE(256) 
