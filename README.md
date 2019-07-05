@@ -38,3 +38,12 @@ This folder contains everything related to all academic students projects develo
 - For speech recognition it uses Mel-frequency cestrum coefficien Algorithm.
 - Once the pronounced character is recognized corresponding character is send on serial which then displaced on GLCD.
 - Arduino Uno is interfaced with the GLCD to display the character.
+
+5.Nrf and Bluetooth based Home Automation
+- This Project contains 
+	1.	HTTP Server tab, also act as hotspot for mobile and mobile access it through local webpage.
+	2.  Tab communicates with master hardware over bluetooth for controlling appliance and sending alerts
+	3.  Master hardware communicates with slave devices over nrf based propritory rf network.
+- Slave device consists of Pir sensor and alaram device
+- Master device consists of Relay based hardware for controlling of AC appliances
+- This project only consists of codes for master and slave device (huter and PIR sensor). All devices has host mcu as P89v51 controller.
